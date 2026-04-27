@@ -1,0 +1,24 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: wallet-service
+              uri: lb://WALLET-SERVICE
+              predicates:
+                - Path=/wallet/**
+            - id: identity-service
+              uri: lb://IDENTITY-SERVICE
+              predicates:
+                - Path=/auth/**
+
+eureka:
+  client:
+    service-url:
+      defaultzone: http://localhost:8761/eureka/
