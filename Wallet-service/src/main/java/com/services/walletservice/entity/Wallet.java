@@ -2,12 +2,15 @@ package com.services.walletservice.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Entity
 public class Wallet {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer walletId;
     private  String userId;
     private Double money;

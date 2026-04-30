@@ -17,6 +17,10 @@ spring:
               uri: lb://IDENTITY-SERVICE
               predicates:
                 - Path=/auth/**
+            - id: Investment-service
+              uri: lb://INVESTMENTSERVICES
+              predicates:
+                - Path=/investment/**
 
 eureka:
   client:

@@ -36,5 +36,14 @@ public class JwtToken {
         byte[] decode = Decoders.BASE64.decode(SECRETS);
         return Keys.hmacShaKeyFor(decode);
     }
+
+    public String validateToken(String token){
+        return Jwts.parser()
+                .setSigningKey(SECRETS)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+
+    }
 }
             
