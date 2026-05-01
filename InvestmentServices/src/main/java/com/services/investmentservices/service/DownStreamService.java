@@ -24,11 +24,25 @@ public class DownStreamService {
         Map<String, Object> params = new HashMap<>();
         params.put("userId", userId);
         params.put("amount", amount);
-        return restTemplate.getForEntity(URL, String.class, params).getBody();
+        String body = restTemplate.getForEntity(URL, String.class, params).getBody();
+        return "SUCCESS";
     }
 
     public String walletFallback(String userId, Double amount, Throwable ex){
         System.out.println("Fallback Method call"+ex.getMessage());
         return "wallet service is down";
+    }
+
+    public String compentiateTxWalletServiceAddAmount(String userId, Double amount) {
+        System.out.println("inside actual method");
+        final String URL = "http://WALLET-SERVICE/wallet/add-money/{userId}/{amount}";
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("amount", amount);
+        return  restTemplate.getForEntity(URL, String.class, params).getBody();
+    }
+
+    public String callTransctionService() {
+        return "SUCCESS";
     }
 }
