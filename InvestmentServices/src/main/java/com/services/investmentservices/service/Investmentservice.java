@@ -3,7 +3,9 @@ package com.services.investmentservices.service;
 import com.services.investmentservices.entity.Investment;
 import com.services.investmentservices.repo.InverstmentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jmx.ParentAwareNamingStrategy;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +16,11 @@ public class Investmentservice {
 
     @Autowired
     InverstmentRepo repo;
+    @Autowired
+    private ParentAwareNamingStrategy objectNamingStrategy;
+
+    @Autowired
+    KafkaTemplate<String, Investment> kafkaTemplate;
 
     public ResponseEntity<String> createInvestment(String userId, Double amount) {
         String status ="INIT";
@@ -58,6 +65,23 @@ public class Investmentservice {
         }
 
         return ResponseEntity.ok(status);
+    }
+
+    public ResponseEntity<String> createInvestmentKafka(String userId, Double amount) {
+//        create investmet objectNamingStrategysave to db
+//                initially status init
+//
+//                //send mesg to investment topic
+
+        Investment investment = new Investment();
+        investment.setStatus("INIT");
+        investment.setUserId(userId);
+        investment.setAmount(amount);
+        investment = repo.save(investment);
+        //send mesg to investment topic
+        kafkaTemplate.send("investment_topic",userId, investment);
+//        return the message;
+        return ResponseEntity.ok("Investment Initiated");
     }
 
 

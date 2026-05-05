@@ -1,14 +1,25 @@
 package com.services.walletservice.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.services.walletservice.entity.Investment;
 import com.services.walletservice.entity.Wallet;
 import com.services.walletservice.repo.WalletRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class WalletService {
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @Autowired
+    KafkaTemplate<String, Investment> kafkaTemplate;
 
     @Autowired
     WalletRepo repo;
@@ -48,5 +59,24 @@ public class WalletService {
         return repo.findByUserId(userId)
                 .map(Wallet::getMoney)
                 .orElse(0.0);
+    }
+
+    @KafkaListener(topics = "investment_topic", groupId = "investment_gro_id")
+    public void processInvestment(String msg) throws JsonProcessingException {
+        System.out.println(msg);
+        Investment investment = new Investment();
+        try {
+            investment = objectMapper.readValue(msg, Investment.class);
+            String response = deduct(investment.getUserId(), investment.getAmount());
+            if (response != null) {
+                investment.setStatus("tx_sccful");
+                kafkaTemplate.send("investment_success", investment.getUserId(),investment);
+            }
+        }catch (Exception e){
+            investment.setStatus("tx_failure");
+            kafkaTemplate.send("invesment_failure", investment.getUserId(),investment);
+        }
+
+
     }
 }

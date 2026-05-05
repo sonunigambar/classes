@@ -17,6 +17,11 @@ public class InvestmentController {
         return investmentservice.createInvestment(userId, amount);
     }
 
+    @GetMapping("/investment/kafka2/{userId}")
+    public ResponseEntity<String> createInvestmentUisngEventDriven(@PathVariable String userId, @RequestParam Double amount){
+        return investmentservice.createInvestmentKafka(userId, amount);
+    }
+
     @GetMapping("/getPortfolio")
     public String getPortFolio(@PathVariable String userId){
         return "Investment details here";
