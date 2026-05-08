@@ -1,10 +1,13 @@
 package com.services.investmentservices.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.services.investmentservices.entity.Investment;
 import com.services.investmentservices.repo.InverstmentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jmx.ParentAwareNamingStrategy;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +25,17 @@ public class Investmentservice {
     @Autowired
     KafkaTemplate<String, Investment> kafkaTemplate;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     public ResponseEntity<String> createInvestment(String userId, Double amount) {
         String status ="INIT";
         Investment investment = new Investment();
         try {
             //step-1
-            String walletResponse = downStreamService.callWalletServiceDeductAmount(userId, amount);
+            String walletResponse = downStreamService.callWalletServiceDeductAmountWebClient(userId, amount);
             if (walletResponse != null && !"SUCCESS".equals(walletResponse)) {
-                return ResponseEntity.badRequest().body("Wallet Deduction Failed");
+                return ResponseEntity.status(408).body(walletResponse);
             }
             status = "WALLET_DEBIT_DONE";
             //save to investment db step-2
@@ -82,6 +88,22 @@ public class Investmentservice {
         kafkaTemplate.send("investment_topic",userId, investment);
 //        return the message;
         return ResponseEntity.ok("Investment Initiated");
+    }
+
+    @KafkaListener(topics = "investment_success", groupId = "tx_grp_id")
+    public String investment_sccFul(String msg) throws JsonProcessingException {
+        Investment investment = objectMapper.readValue(msg, Investment.class);
+        repo.save(investment);
+        System.out.println("msg: "+msg);
+        return msg;
+    }
+
+    @KafkaListener(topics = "invesment_failure", groupId = "tx_fail_grp_id")
+    public String investment_fail(String msg) throws JsonProcessingException {
+        Investment investment = objectMapper.readValue(msg, Investment.class);
+        repo.save(investment);
+        System.out.println("msg: "+msg);
+        return msg;
     }
 
 

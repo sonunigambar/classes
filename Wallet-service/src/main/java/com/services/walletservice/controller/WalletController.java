@@ -25,7 +25,8 @@ public class WalletController {
     }
 
     @GetMapping("/deduct-money/{userId}/{amount}")
-    public ResponseEntity<String> deduct(@PathVariable String userId, @PathVariable Double amount) {
+    public ResponseEntity<String> deduct(@PathVariable String userId, @PathVariable Double amount) throws InterruptedException {
+//        Thread.sleep(10000);
         String msg = walletService.deduct(userId, amount);
         return new ResponseEntity<>(msg, HttpStatus.OK);
     }

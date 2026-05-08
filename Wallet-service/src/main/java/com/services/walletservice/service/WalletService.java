@@ -66,7 +66,9 @@ public class WalletService {
         System.out.println(msg);
         Investment investment = new Investment();
         try {
+
             investment = objectMapper.readValue(msg, Investment.class);
+//            int x = 10/0;
             String response = deduct(investment.getUserId(), investment.getAmount());
             if (response != null) {
                 investment.setStatus("tx_sccful");
@@ -74,6 +76,7 @@ public class WalletService {
             }
         }catch (Exception e){
             investment.setStatus("tx_failure");
+            add(investment.getUserId(), investment.getAmount());
             kafkaTemplate.send("invesment_failure", investment.getUserId(),investment);
         }
 

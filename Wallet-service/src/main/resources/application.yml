@@ -1,9 +1,7 @@
 spring:
   application:
-    name: investment-service
+    name: wallet-service
   config:
     import: "configserver:http://localhost:9098"
 server:
-  port: '9095'
-
-
+  port: '9096'

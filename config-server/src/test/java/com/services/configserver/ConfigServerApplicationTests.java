@@ -1,15 +1,13 @@
-/*
-package com.services.investmentservices;
+package com.services.configserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class InvestmentServicesApplicationTests {
+class ConfigServerApplicationTests {
 
     @Test
     void contextLoads() {
     }
 
 }
-*/

@@ -13,7 +13,7 @@ public class InvestmentController {
     Investmentservice investmentservice;
 
     @GetMapping("/investment/{userId}")
-    public ResponseEntity<String> createInvestment(@PathVariable String userId, @RequestParam Double amount){
+    public ResponseEntity<String> createInvestment(@PathVariable String userId, @RequestParam Double amount) throws InterruptedException {
         return investmentservice.createInvestment(userId, amount);
     }
 
