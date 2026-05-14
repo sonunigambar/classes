@@ -1,5 +1,6 @@
 package com.services.investmentservices.controller;
 
+import com.services.investmentservices.entity.Investment;
 import com.services.investmentservices.service.Investmentservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,9 @@ public class InvestmentController {
         return investmentservice.createInvestmentKafka(userId, amount);
     }
 
-    @GetMapping("/getPortfolio")
-    public String getPortFolio(@PathVariable String userId){
-        return "Investment details here";
+    @GetMapping("/getPortfolio/{userId}")
+    public Investment getPortFolio(@PathVariable String userId){
+        return investmentservice.getPortFolio(userId);
     }
 
 }

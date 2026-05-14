@@ -6,10 +6,13 @@ import com.services.investmentservices.entity.Investment;
 import com.services.investmentservices.repo.InverstmentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jmx.ParentAwareNamingStrategy;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class Investmentservice {
@@ -107,4 +110,9 @@ public class Investmentservice {
     }
 
 
+    @Cacheable(value = "investment", key = "#investmentId")
+    public Investment getPortFolio(String investmentId) {
+        Optional<Investment> investmentDetails = repo.findById(Integer.parseInt(investmentId));
+        return investmentDetails.get();
+    }
 }

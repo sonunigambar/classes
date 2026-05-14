@@ -3,6 +3,12 @@ spring:
     name: investment-service
   config:
     import: "configserver:http://localhost:9098"
+  cache:
+    type: redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
 server:
   port: '9095'
 
