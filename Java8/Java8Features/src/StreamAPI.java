@@ -40,14 +40,14 @@ public class StreamAPI {
 //        length of each word in a string
             String str1 = "welcome to my coding cure welcome to Java";
             String[] wordArray = str1.split(" ");
-//            LinkedHashMap<String, Integer> legthofEachWord = Arrays.stream(wordArray)
-//                    .collect(Collectors.toMap(word -> word, String::length, (e1, e2) -> e1))
-//                    .entrySet()
-//                    .stream()
-//                    .sorted(Map.Entry.comparingByKey())
-//                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-//
-//            System.out.println(legthofEachWord);
+            LinkedHashMap<String, Integer> legthofEachWord = Arrays.stream(wordArray)
+                    .collect(Collectors.toMap(word -> word, String::length, (e1, e2) -> e1))
+                    .entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByKey())
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+            System.out.println(legthofEachWord);
 
 
 //        Find the first non-repeating character in a string
