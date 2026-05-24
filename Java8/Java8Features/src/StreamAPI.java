@@ -41,7 +41,7 @@ public class StreamAPI {
             String str1 = "welcome to my coding cure welcome to Java";
             String[] wordArray = str1.split(" ");
 //            LinkedHashMap<String, Integer> legthofEachWord = Arrays.stream(wordArray)
-//                    .collect(Collectors.toMap(word -> word, String::length))
+//                    .collect(Collectors.toMap(word -> word, String::length, (e1, e2) -> e1))
 //                    .entrySet()
 //                    .stream()
 //                    .sorted(Map.Entry.comparingByKey())
